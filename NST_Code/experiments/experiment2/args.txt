@@ -1,0 +1,4 @@
+content_dir: NST_Code/content_data
+style_dir: NST_Code/style_data
+vgg: 
+experiment: experiment2
