@@ -2,6 +2,7 @@ import argparse
 from altair import value
 import torch
 from pathlib import Path
+from utils.utils import *
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -34,6 +35,33 @@ def parse_arguments():
         help='Name of experiment'
     )
 
+    parser.add_argument(
+        '--final_size',
+        type=int,
+        default=512,
+        help='Final size of the image'
+    )
+
+    parser.add_argument(
+        '--content_size',
+        type=int,
+        default=256,
+        help='Size of the content image'
+    )
+
+    parser.add_argument(
+        '--style_size',
+        type=int,
+        default=256,
+        help='Size of the style image'
+    )
+
+    parser.add_argument(
+        '--crop',
+        action='store_true',
+        default=True,
+        help='crop images'
+    )
     return parser.parse_args()
 
 def main():
@@ -45,10 +73,22 @@ def main():
     save_dir.mkdir(parents=True, exist_ok=True)
 
 
-    # save arguments valvues to a text file
+    # save arguments values to a text file
     with open(save_dir / 'args.txt', 'w') as args_file:
         for key, value in vars(args).items():
             args_file.write(f'{key}: {value}\n')
+
+    content_transform = get_transform(args.content_size, args.crop , args.final_size)
+    style_transform = get_transform(args.style_size, args.crop , args.final_size)
+
+
+    content_dataset = ImageFolderDataset(args.content_dir, content_transform)
+    style_dataset = ImageFolderDataset(args.style_dir, style_transform)
+
+
+
+
+        
             
 
 if __name__ == "__main__":
