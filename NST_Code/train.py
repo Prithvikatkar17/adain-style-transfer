@@ -1,6 +1,7 @@
 import argparse
 from altair import value
 import torch
+from torch.utils.data import DataLoader
 from pathlib import Path
 from utils.utils import *
 
@@ -84,6 +85,18 @@ def main():
 
     content_dataset = ImageFolderDataset(args.content_dir, content_transform)
     style_dataset = ImageFolderDataset(args.style_dir, style_transform)
+
+    content_loader = DataLoader(content_dataset,
+                                batch_size= args.batch_size, 
+                                shuffle=True,
+                                pin_memory=True,
+                                drop_last=True)
+
+    style_loader = DataLoader(style_dataset,
+                                batch_size= args.batch_size,
+                                shuffle=True,
+                                pin_memory=True,
+                                drop_last=True)
 
 
 
