@@ -1,5 +1,5 @@
 import argparse
-from altair import value
+
 import torch
 from torch.utils.data import DataLoader
 from pathlib import Path
@@ -63,6 +63,7 @@ def parse_arguments():
         default=True,
         help='crop images'
     )
+    parser.add_argument('--batch_size', type=int, default=4)
     return parser.parse_args()
 
 def main():
@@ -99,7 +100,11 @@ def main():
                                 drop_last=True)
 
 
+    print("number of content batches in content dataset :",len(content_dataset))
+    print("number of style batches in style dataset :" , len(style_dataset))
 
+    for batch in style_loader :
+        print(batch.shape)
 
         
             
