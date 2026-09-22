@@ -39,21 +39,21 @@ def parse_arguments():
     parser.add_argument(
         '--final_size',
         type=int,
-        default=512,
+        default=256,
         help='Final size of the image'
     )
 
     parser.add_argument(
         '--content_size',
         type=int,
-        default=256,
+        default=512,
         help='Size of the content image'
     )
 
     parser.add_argument(
         '--style_size',
         type=int,
-        default=256,
+        default=512,
         help='Size of the style image'
     )
 
