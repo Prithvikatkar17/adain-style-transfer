@@ -62,3 +62,22 @@ class VGGEncoder(nn.Module):
             nn.ReLU(), # Relu5-4
         )
         self.vgg.load_state_dict(torch.load('vgg_path'))  # Load pretrained weights
+        self.vgg = nn.Sequential(*list(self.vgg.children())[:31])  # Keep layers up to relu4_1
+        enc_layers = list(self.vgg.children())
+        self.enc_1 = nn.Sequential(*enc_layers[:4])   # relu1_1
+        self.enc_2 = nn.Sequential(*enc_layers[4:11])  # relu2_1
+        self.enc_3 = nn.Sequential(*enc_layers[11:18])  # relu3_1
+        self.enc_4 = nn.Sequential(*enc_layers[18:31])  # relu4_1
+
+        for names in ["enc_1", "enc_2", "enc_3", "enc_4"]:
+            for param in getattr(self, names).parameters():
+                param.requires_grad = False
+
+    def forward(self, input , is_test=False):
+        h1 = self.enc_1(input)
+        h2 = self.enc_2(h1) 
+        h3 = self.enc_3(h2)
+        h4 = self.enc_4(h3)
+        if is_test:
+            return h4 
+        return [h1, h2, h3, h4]
