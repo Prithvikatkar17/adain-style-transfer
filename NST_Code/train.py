@@ -1,8 +1,10 @@
 import argparse
-
+from hpack import Decoder
+import torch.optim as optim
 import torch
 from torch.utils.data import DataLoader
 from pathlib import Path
+from NST_Code.utils.models import VGGEncoder
 from utils.utils import *
 
 def parse_arguments():
@@ -66,6 +68,10 @@ def parse_arguments():
     parser.add_argument('--batch_size', type=int, default=4)
     return parser.parse_args()
 
+    parser.add_argument('--lr', type=float, default=1e-4, help='Learning rate for the optimizer')  
+
+    parser.add_argument('--lr_decay', type=float, default=5e-5, help='Learning rate decay factor for the scheduler')
+
 def main():
     args = parse_arguments()
     print(args.experiment)
@@ -105,6 +111,15 @@ def main():
 
     for batch in style_loader :
         print(batch.shape)
+
+
+    encoder = VGGEncoder(args.vgg).to(device)
+    decoder = Decoder().to(device)
+
+
+    optimizer = optim.Adam(decoder.parameters(), lr=args.lr)
+    scheduler = optim.lr_scheduler.StepLR(optimizer, 
+                                          lr_lambda=lambda epoch: 1.0 / (1.0 +args.lr_decay * epoch))
 
         
             
